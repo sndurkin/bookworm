@@ -10,11 +10,11 @@ class Database {
       driver: sqlite3.Database,
     });
 
-    await this.db.exec(`CREATE TABLE IF NOT EXISTS book (
+    await this.db.exec(`CREATE TABLE IF NOT EXISTS story (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   title TEXT NOT NULL,
-  story TEXT NOT NULL,
-  age INTEGER NOT NULL,
+  sentences TEXT NOT NULL,
+  grade TEXT NOT NULL,
   topic TEXT NOT NULL
 )`);
 
@@ -27,17 +27,17 @@ class Database {
     });
   }
 
-  async insertBook({ title, story, age, topic }) {
-    await this.db.run(`INSERT INTO book (title, story, age, topic) VALUES (?, ?, ?, ?)`,
+  async insertStory({ title, sentences, grade, topic }) {
+    await this.db.run(`INSERT INTO story (title, sentences, grade, topic) VALUES (?, ?, ?, ?)`,
       title,
-      story,
-      age,
+      sentences,
+      grade,
       topic,
     );
   }
 
-  async getAllBooks() {
-    return await this.db.all('SELECT * FROM book');
+  async getAllStories() {
+    return await this.db.all('SELECT * FROM story');
   }
 
 }

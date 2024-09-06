@@ -1,0 +1,21 @@
+{
+  "name": "provide_story",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "title": {
+        "type": "string",
+        "description": "The title of the story."
+      },
+      "sentences": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "description": "An individual sentence in the story."
+        },
+        "description": "The sentences of the story."
+      }
+    }
+  },
+  "required": ["title", "sentences"]
+}

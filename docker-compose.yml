@@ -1,0 +1,17 @@
+services:
+  app:
+    image: bookworm:latest
+    working_dir: /app
+    volumes:
+      - .:/app
+      - ./web:/app/web
+      - ./dist:/app/dist
+      - /app/node_modules
+    command: sh -c "rm -f /app/database.sqlite && npm install && npm run build && npm run dev"
+    ports:
+      - "3015:3015" # node server
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
