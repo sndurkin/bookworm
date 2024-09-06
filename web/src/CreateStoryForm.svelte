@@ -1,5 +1,5 @@
 <script>
-  import { createEventDispatcher } from "svelte";
+  import { onMount, createEventDispatcher } from "svelte";
   const dispatch = createEventDispatcher();
 
   export let creating = false;
@@ -8,7 +8,15 @@
   let grade;
   let sentenceCount;
 
+  onMount(() => {
+    grade = localStorage.getItem("grade") || "preschool";
+    sentenceCount = localStorage.getItem("sentenceCount");
+  });
+
   function createStory() {
+    localStorage.setItem("grade", grade);
+    localStorage.setItem("sentenceCount", sentenceCount);
+
     dispatch("create-story", {
       topic,
       grade,
