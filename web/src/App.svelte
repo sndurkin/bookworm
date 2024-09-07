@@ -1,9 +1,12 @@
 <script>
   import CreateStoryForm from './CreateStoryForm.svelte';
   import Story from './Story.svelte';
+  import WordHelp from './WordHelp.svelte';
 
   let state = 'initial';
   let story = null;
+  let wordMappings = {};
+  let wordToHelpWith = null;
 
   async function handleCreateStory (event) {
     const { topic, grade, sentenceCount } = event.detail;
@@ -23,7 +26,21 @@
 
     const data = await resp.json();
     story = data.story;
-    state = 'created';
+    wordMappings = data.wordMappings || {};
+    state = 'reading-story';
+  }
+
+  function handleWordHelpOpen (event) {
+    const { word } = event.detail;
+    if (word in wordMappings) {
+      wordToHelpWith = word;
+      state = 'seeking-word-help';
+    }
+  }
+
+  function handleWordHelpClose () {
+    state = 'reading-story';
+    wordToHelpWith = null;
   }
 </script>
 
@@ -36,8 +53,18 @@
             creating={state === 'creating'}
             on:create-story={handleCreateStory}
           />
-        {:else if state === 'created'}
-          <Story story={story} />
+        {:else if state === 'reading-story' || state === 'seeking-word-help'}
+          <Story
+            story={story}
+            on:word-help={handleWordHelpOpen}
+          />
+          {#if state === 'seeking-word-help'}
+            <WordHelp
+              word={wordToHelpWith}
+              wordMapping={wordMappings[wordToHelpWith]}
+              on:close={handleWordHelpClose}
+            />
+          {/if}
         {/if}
       </div>
     </div>

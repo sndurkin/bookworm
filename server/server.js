@@ -14,6 +14,8 @@ import storyFunctionCallSchema from '../story_function_call_schema.json' assert 
 const app = express();
 const PORT = 3015;
 
+const wordMappings = JSON.parse(await fs.readFile('server/word_mappings.json', 'utf8'));
+
 const GPT_MODEL = 'gpt-4o-mini';
 const SYSTEM_MESSAGE = {
   role: 'system',
@@ -38,12 +40,30 @@ app.post('/stories', async (req, res) => {
   try {
     console.log(req.body);
     const story = await createStory(req.body);
-    res.json({ story });
+    res.json({
+      story,
+      wordMappings: getRelevantWordMappings(story.sentences)
+    });
   } catch (error) {
     res.status(500).json({ error: 'Failed to create the story.' });
     console.error(error);
   }
 });
+
+function getRelevantWordMappings(sentences) {
+  const words = sentences.map(sentence => sentence.split(' ')).flat();
+  const relevantWordMappings = {};
+  for (const word of words) {
+    const strippedWord = word.replace(/[^a-zA-Z]/g, '')
+    if (wordMappings[strippedWord]) {
+      relevantWordMappings[strippedWord] = wordMappings[strippedWord];
+    }
+    else if (wordMappings[strippedWord.toLowerCase()]) {
+      relevantWordMappings[strippedWord] = wordMappings[strippedWord.toLowerCase()];
+    }
+  }
+  return relevantWordMappings;
+}
 
 async function createStory(storyDetails) {
   const { topic, sentenceCount, grade } = storyDetails;
