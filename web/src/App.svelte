@@ -77,7 +77,15 @@
     </div>
   </div>
 </main>
+<footer>by Della Tech LLC</footer>
 
 <style>
-
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  color: #ccc;
+  padding: 0.5em;
+  text-align: center;
+}
 </style>
