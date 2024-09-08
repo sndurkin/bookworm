@@ -53,7 +53,7 @@
 }
 
 .modal-box {
-  font-family: "Georgia", "Times New Roman", "Palatino", "Serif";
+  font-family: 'Georgia', 'Times New Roman', 'Palatino', 'Serif';
   background-color: white;
   padding: 2em;
   border-radius: 8px;

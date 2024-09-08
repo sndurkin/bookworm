@@ -129,7 +129,7 @@
 
 <style>
 .story {
-  font-family: "Georgia", "Times New Roman", "Palatino", "Serif";
+  font-family: 'Georgia', 'Times New Roman', 'Palatino', 'Serif';
 }
 .sentence {
   display: flex;
