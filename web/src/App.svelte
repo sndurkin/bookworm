@@ -38,6 +38,12 @@
     }
   }
 
+  function handleStartOver () {
+    state = 'initial';
+    story = null;
+    wordMappings = {};
+  }
+
   function handleWordHelpClose () {
     state = 'reading-story';
     wordToHelpWith = null;
@@ -57,6 +63,7 @@
           <Story
             story={story}
             on:word-help={handleWordHelpOpen}
+            on:start-over={handleStartOver}
           />
           {#if state === 'seeking-word-help'}
             <WordHelp

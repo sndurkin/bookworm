@@ -1,5 +1,5 @@
 <script>
-  import { onMount, createEventDispatcher } from 'svelte';
+  import { onMount, onDestroy, createEventDispatcher } from 'svelte';
 
   export let story;
 
@@ -62,18 +62,51 @@
     }
   }
 
+  function handleKeyDown(event) {
+    switch (event.key) {
+      case 'ArrowLeft':
+        handlePrevious();
+        break;
+      case 'ArrowRight':
+        handleNext();
+        break;
+      case ' ':
+        event.preventDefault();
+        handleOpenWordHelp();
+        break;
+    }
+  }
+
+  function handleStartOver() {
+    dispatch('start-over');
+  }
+
   onMount(() => {
     document.querySelector('.word')?.focus();
 
+    document.addEventListener('keydown', handleKeyDown);
+
     // Mouse events
-    storyEl.addEventListener('mousedown', startPress);
-    storyEl.addEventListener('mouseup', cancelPress);
-    storyEl.addEventListener('mouseleave', cancelPress);
+    document.addEventListener('mousedown', startPress);
+    document.addEventListener('mouseup', cancelPress);
+    document.addEventListener('mouseleave', cancelPress);
 
     // Touch events (for mobile long press)
-    storyEl.addEventListener('touchstart', startPress);
-    storyEl.addEventListener('touchend', cancelPress);
-    storyEl.addEventListener('touchcancel', cancelPress);
+    document.addEventListener('touchstart', startPress);
+    document.addEventListener('touchend', cancelPress);
+    document.addEventListener('touchcancel', cancelPress);
+  });
+
+  onDestroy(() => {
+    document.removeEventListener('keydown', handleKeyDown);
+
+    document.removeEventListener('mousedown', startPress);
+    document.removeEventListener('mouseup', cancelPress);
+    document.removeEventListener('mouseleave', cancelPress);
+
+    storyEl.removeEventListener('touchstart', startPress);
+    storyEl.removeEventListener('touchend', cancelPress);
+    storyEl.removeEventListener('touchcancel', cancelPress);
   });
 </script>
 
@@ -88,12 +121,16 @@
   {/each}
 </div>
 <div class="actions">
+  <button class="btn btn-light me-auto action-btn" on:click={handleStartOver}>⟳</button>
   <button class="btn btn-light action-btn" on:click={handleOpenWordHelp}>?</button>
   <button class="btn btn-light action-btn" on:click={handlePrevious}>&lt;</button>
   <button class="btn btn-light action-btn" on:click={handleNext}>&gt;</button>
 </div>
 
 <style>
+.story {
+  font-family: "Georgia", "Times New Roman", "Palatino", "Serif";
+}
 .sentence {
   display: flex;
   flex-wrap: wrap;
@@ -112,6 +149,7 @@
 
 .actions {
   position: fixed;
+  left: 1em;
   bottom: 1em;
   right: 1em;
   display: flex;
