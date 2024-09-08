@@ -1,6 +1,6 @@
 services:
   app:
-    image: bookworm:latest
+    image: storymagic:latest
     working_dir: /app
     volumes:
       - .:/app
@@ -9,8 +9,9 @@ services:
       - /app/node_modules
     command: sh -c "rm -f /app/database.sqlite && npm install && npm run build && npm run dev"
     ports:
-      - "3015:3015" # node server
+      - "3015:3015"
     environment:
+      - PORT=3015
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true

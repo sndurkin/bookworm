@@ -12,7 +12,6 @@ import HttpError from './HttpError.js';
 import storyFunctionCallSchema from '../story_function_call_schema.json' assert { type: 'json' };
 
 const app = express();
-const PORT = 3015;
 
 const wordMappings = JSON.parse(await fs.readFile('server/word_mappings.json', 'utf8'));
 
@@ -130,31 +129,22 @@ The story should be no more than ${sentenceCount} sentences long.`;
   }
 }
 
-function getLocalIPAddress() {
-  const interfaces = os.networkInterfaces();
-  for (const iface of Object.values(interfaces)) {
-    for (const alias of iface) {
-      if (alias.family === 'IPv4' && !alias.internal) {
-        return alias.address;
-      }
-    }
-  }
-  return 'localhost';
+if (process.env.NODE_ENV === 'development') {
+  const credentials = {
+    key: fs.readFileSync('server/key.pem', 'utf8'),
+    cert: fs.readFileSync('server/cert.pem', 'utf8'),
+  };
+
+  const httpsServer = https.createServer(credentials, app);
+  httpsServer.listen(process.env.PORT, () => {
+    console.log(`Server is running on :${process.env.PORT}`);
+  });
 }
-
-// Create an HTTPS server
-
-// Read SSL certificate files
-const credentials = {
-  key: fs.readFileSync('server/key.pem', 'utf8'),
-  cert: fs.readFileSync('server/cert.pem', 'utf8'),
-};
-
-const httpsServer = https.createServer(credentials, app);
-
-httpsServer.listen(PORT, () => {
-  console.log(`HTTPS Server is running on https://${getLocalIPAddress()}:${PORT}`);
-});
+else {
+  app.listen(80, () => {
+    console.log(`Server is running on :80`);
+  });
+}
 
 const db = new Database();
 db.setup();

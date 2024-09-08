@@ -4,8 +4,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
-RUN rm -f database.sqlite
 RUN npm run build
 
-EXPOSE 3015
-CMD ["npm run serve"]
+EXPOSE 80 3015
+CMD sh -c "npm run serve"
