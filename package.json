@@ -1,7 +1,7 @@
 {
-  "name": "bookworm",
+  "name": "storymagic",
   "version": "1.0.0",
-  "description": "Bookworm is a tool that helps you create simple books and short stories to help children learn to read.",
+  "description": "storymagic is a tool that helps you create simple short stories to help children learn to read.",
   "main": "web/index.js",
   "type": "module",
   "scripts": {
